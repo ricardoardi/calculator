@@ -16,6 +16,7 @@ const tambah = document.querySelector(".add")
 const equal = document.querySelector(".equal")
 const display = document.querySelector(".display")
 const decimal = document.querySelector(".decimal")
+const del = document.querySelector(".delete")
 
 seven.addEventListener("click",()=>{
     display.textContent+="7"
@@ -27,6 +28,7 @@ nine.addEventListener("click",()=>{
     display.textContent+="9"
 })
 bagi.addEventListener("click",()=>{
+    rules(),
     display.textContent+="/"
 })
 four.addEventListener("click",()=>{
@@ -39,6 +41,7 @@ six.addEventListener("click",()=>{
     display.textContent+="6"
 })
 kali.addEventListener("click",()=>{
+    rules(),
     display.textContent+="x"
 })
 one.addEventListener("click",()=>{
@@ -51,6 +54,7 @@ three.addEventListener("click",()=>{
     display.textContent+="3"
 })
 kurang.addEventListener("click",()=>{
+    rules(),
     display.textContent+="-"
 })
 zero.addEventListener("click",()=>{
@@ -60,15 +64,34 @@ clear.addEventListener("click",()=>{
     display.textContent=""
 })
 tambah.addEventListener("click",()=>{
+    rules(),
     display.textContent+="+"
 })
 equal.addEventListener("click",()=>{
-    display.textContent+="="
+    intialize();
 })
 
 decimal.addEventListener("click",()=>{
     display.textContent+="."
+    
 })
+
+del.addEventListener("click",()=>{
+    display.textContent=display.textContent.slice(0,-1);
+})
+
+
+const alat = "+-x/";
+
+function rules(){
+    if(!display.textContent){
+        display.textContent="0";
+    }
+    let correction = display.textContent.split("")
+    if(alat.includes(correction[correction.length-1])){
+        display.textContent=display.textContent.slice(0,-1)
+    }
+}
 
 function add(a,b){
     return a+b;
@@ -84,9 +107,15 @@ function divide(a,b){
 }
 
 
-let firstNumber = a;
-let operator = operator;
-let lastNumber = b;
+function intialize(){
+    let arr = display.textContent.split('')
+    const operator = arr.filter((tanda)=>alat.includes(tanda)).join("")
+    const operatorIndex = arr.indexOf(operator)
+    const firstNumber = parseFloat(arr.slice(0,operatorIndex).join(""));
+    const lastNumber = parseFloat(arr.slice(operatorIndex+1,arr.length).join(""));
+    operate(operator,firstNumber,lastNumber);
+
+}
 
 function operate(operator,firstNumber,lastNumber){
     let result;
@@ -97,11 +126,14 @@ function operate(operator,firstNumber,lastNumber){
         case "-":
             result = subtract(firstNumber,lastNumber)
             break;
-        case "*":
+        case "x":
             result = multiply(firstNumber,lastNumber)
             break;
         case "/":
             result = divide(firstNumber,lastNumber)
             break;
     }
+
+    display.textContent=result;
 }
+
